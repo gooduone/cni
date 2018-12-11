@@ -38,12 +38,12 @@ To avoid duplication, we think it is prudent to define a common interface betwee
 ## Who is using CNI?
 ### Container runtimes
 - [rkt - container engine](https://coreos.com/blog/rkt-cni-networking.html)
-- [Kurma - container runtime](http://kurma.io/)
 - [Kubernetes - a system to simplify container operations](http://kubernetes.io/docs/admin/network-plugins/)
 - [OpenShift - Kubernetes with additional enterprise features](https://github.com/openshift/origin/blob/master/docs/openshift_networking_requirements.md)
 - [Cloud Foundry - a platform for cloud applications](https://github.com/cloudfoundry-incubator/cf-networking-release)
-- [Mesos - a distributed systems kernel](https://github.com/apache/mesos/blob/master/docs/cni.md)
+- [Apache Mesos - a distributed systems kernel](https://github.com/apache/mesos/blob/master/docs/cni.md)
 - [Amazon ECS - a highly scalable, high performance container management service](https://aws.amazon.com/ecs/)
+- [Singularity - container platform optimized for HPC, EPC, and AI](https://github.com/sylabs/singularity)
 
 ### 3rd party plugins
 - [Project Calico - a layer 3 virtual network](https://github.com/projectcalico/calico-cni)
@@ -60,6 +60,11 @@ To avoid duplication, we think it is prudent to define a common interface betwee
 - [Linen - a CNI plugin designed for overlay networks with Open vSwitch and fit in SDN/OpenFlow network environment](https://github.com/John-Lin/linen-cni)
 - [Vhostuser - a Dataplane network plugin - Supports OVS-DPDK & VPP](https://github.com/intel/vhost-user-net-plugin)
 - [Amazon ECS CNI Plugins - a collection of CNI Plugins to configure containers with Amazon EC2 elastic network interfaces (ENIs)](https://github.com/aws/amazon-ecs-cni-plugins)
+- [Bonding CNI - a Link aggregating plugin to address failover and high availability network](https://github.com/Intel-Corp/bond-cni)
+- [ovn-kubernetes - an container network plugin built on Open vSwitch (OVS) and Open Virtual Networking (OVN) with support for both Linux and Windows](https://github.com/openvswitch/ovn-kubernetes)
+- [Juniper Contrail](http://www.juniper.net/cloud) / [TungstenFabric](https://tungstenfabric.io) -  Provides overlay SDN solution, delivering multicloud networking, hybrid cloud networking, simultaneous overlay-underlay support, network policy enforcement, network isolation, service chaining and flexible load balancing
+- [Knitter - a CNI plugin supporting multiple networking for Kubernetes](https://github.com/ZTE/Knitter)
+- [DANM - a CNI-compliant networking solution for TelCo workloads running on Kubernetes](https://github.com/nokia/danm)
 
 The CNI team also maintains some [core plugins in a separate repository](https://github.com/containernetworking/plugins).
 
@@ -73,7 +78,7 @@ If you intend to contribute to code or documentation, please read [CONTRIBUTING.
 
 ### Requirements
 
-The CNI spec is language agnostic.  To use the Go language libraries in this repository, you'll need a recent version of Go.  Our [automated tests](https://travis-ci.org/containernetworking/cni/builds) cover Go versions 1.7 and 1.8.
+The CNI spec is language agnostic.  To use the Go language libraries in this repository, you'll need a recent version of Go.  You can find the Go versions covered by our [automated tests](https://travis-ci.org/containernetworking/cni/builds) in [.travis.yaml](.travis.yml).
 
 ### Reference Plugins
 
@@ -110,6 +115,7 @@ EOF
 $ cat >/etc/cni/net.d/99-loopback.conf <<EOF
 {
 	"cniVersion": "0.2.0",
+	"name": "lo",
 	"type": "loopback"
 }
 EOF

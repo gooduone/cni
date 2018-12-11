@@ -63,18 +63,24 @@ type NetConf struct {
 	Name         string          `json:"name,omitempty"`
 	Type         string          `json:"type,omitempty"`
 	Capabilities map[string]bool `json:"capabilities,omitempty"`
-	IPAM         struct {
-		Type string `json:"type,omitempty"`
-	} `json:"ipam,omitempty"`
-	DNS DNS `json:"dns"`
+	IPAM         IPAM            `json:"ipam,omitempty"`
+	DNS          DNS             `json:"dns"`
+
+	RawPrevResult map[string]interface{} `json:"prevResult,omitempty"`
+	PrevResult    Result                 `json:"-"`
+}
+
+type IPAM struct {
+	Type string `json:"type,omitempty"`
 }
 
 // NetConfList describes an ordered list of networks.
 type NetConfList struct {
 	CNIVersion string `json:"cniVersion,omitempty"`
 
-	Name    string     `json:"name,omitempty"`
-	Plugins []*NetConf `json:"plugins,omitempty"`
+	Name         string     `json:"name,omitempty"`
+	DisableCheck bool       `json:"disableCheck,omitempty"`
+	Plugins      []*NetConf `json:"plugins,omitempty"`
 }
 
 type ResultFactoryFunc func([]byte) (Result, error)

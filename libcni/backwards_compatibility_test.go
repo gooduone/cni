@@ -15,7 +15,9 @@
 package libcni_test
 
 import (
+	"context"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -30,6 +32,18 @@ import (
 )
 
 var _ = Describe("Backwards compatibility", func() {
+	var cacheDirPath string
+
+	BeforeEach(func() {
+		var err error
+		cacheDirPath, err = ioutil.TempDir("", "cni_cachedir")
+		Expect(err).NotTo(HaveOccurred())
+	})
+
+	AfterEach(func() {
+		Expect(os.RemoveAll(cacheDirPath)).To(Succeed())
+	})
+
 	It("correctly handles the response from a legacy plugin", func() {
 		example := legacy_examples.V010
 		pluginPath, err := example.Build()
@@ -43,11 +57,12 @@ var _ = Describe("Backwards compatibility", func() {
 			ContainerID: "some-container-id",
 			NetNS:       "/some/netns/path",
 			IfName:      "eth0",
+			CacheDir:    cacheDirPath,
 		}
 
-		cniConfig := &libcni.CNIConfig{Path: []string{filepath.Dir(pluginPath)}}
+		cniConfig := libcni.NewCNIConfig([]string{filepath.Dir(pluginPath)}, nil)
 
-		result, err := cniConfig.AddNetwork(netConf, runtimeConf)
+		result, err := cniConfig.AddNetwork(context.TODO(), netConf, runtimeConf)
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(result).To(Equal(legacy_examples.ExpectedResult))
